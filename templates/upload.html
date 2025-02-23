@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Finance Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-  <h1>Upload Your Transactions</h1>
-  <form method="POST" action="/upload" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <button type="submit">Upload</button>
-  </form>
+    <div class="container">
+        <h1>Upload Transactions</h1>
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="file" multiple class="file-input">
+            <button type="submit" class="upload-button">Upload Files</button>
+        </form>
+    </div>
 </body>
 </html>
