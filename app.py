@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import os
 import pandas as pd
 from file_categorizer import categorize_file
@@ -12,10 +12,11 @@ from normalize_transactions import (
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'  # Folder to save files
+app.secret_key = 'your_secret_key'  # Required for session management
 
 @app.route('/')
 def home():
-    return render_template('upload.html')  # We'll create this next
+    return render_template('upload.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -53,13 +54,25 @@ def upload_file():
         all_transactions.append(normalized_df)
     
     # Combine all transactions into a single DataFrame
-    combined_transactions = combine_transactions(all_transactions)
+    new_transactions = combine_transactions(all_transactions)
     
-    # Convert the DataFrame to a list of dictionaries (JSON-friendly format)
-    transactions_json = combined_transactions.to_dict(orient="records")
+    # Retrieve existing transactions from the session (if any)
+    existing_transactions = session.get('transactions', [])
+    
+    # Append new transactions to the existing ones
+    combined_transactions = existing_transactions + new_transactions.to_dict(orient="records")
+    
+    # Save the updated transactions back to the session
+    session['transactions'] = combined_transactions
     
     # Render the transactions in the HTML template
-    return render_template('transactions.html', transactions=transactions_json)
+    return render_template('transactions.html', transactions=combined_transactions)
+
+@app.route('/clear', methods=['POST'])
+def clear_transactions():
+    # Clear the transactions from the session
+    session.pop('transactions', None)
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     os.makedirs('uploads', exist_ok=True)  # Create uploads folder
