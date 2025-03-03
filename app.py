@@ -58,8 +58,8 @@ def upload_file():
     # Convert the DataFrame to a list of dictionaries (JSON-friendly format)
     transactions_json = combined_transactions.to_dict(orient="records")
     
-    # Return the transactions as a JSON response
-    return jsonify({"transactions": transactions_json})
+    # Render the transactions in the HTML template
+    return render_template('transactions.html', transactions=transactions_json)
 
 if __name__ == '__main__':
     os.makedirs('uploads', exist_ok=True)  # Create uploads folder

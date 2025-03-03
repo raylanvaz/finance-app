@@ -9,6 +9,7 @@ def normalize_chase_credit_card(df):
     normalized_df["date"] = df["Post Date"]
     normalized_df["description"] = df["Description"]
     normalized_df["amount"] = df["Amount"]
+    normalized_df["category"] = df["Category"]
     normalized_df["source"] = "chase_credit_card"
     return normalized_df
 
@@ -21,6 +22,7 @@ def normalize_chase_bank(df):
     normalized_df["date"] = df["Posting Date"]
     normalized_df["description"] = df["Description"]
     normalized_df["amount"] = df["Amount"]
+    normalized_df["category"] = ""  # No category information in Chase Bank statements
     normalized_df["source"] = "chase_bank"
     return normalized_df
 
@@ -33,6 +35,7 @@ def normalize_citi_credit_card(df):
     normalized_df["date"] = df["Date"]
     normalized_df["description"] = df["Description"]
     normalized_df["amount"] = df["Debit"].fillna(0) - df["Credit"].fillna(0)  # Calculate net amount
+    normalized_df["category"] = ""  # No category information in Chase Bank statements
     normalized_df["source"] = "citi_credit_card"
     return normalized_df
 
